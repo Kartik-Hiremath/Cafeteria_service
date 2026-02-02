@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    name: Backend Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ "3.10", "3.11" ]
+      fail-fast: false
+    defaults:
+      run:
+        working-directory: features
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('features/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio
+      - name: Configure environment variables
+        env:
+          USE_MOCK_AUTH: "true"
+          APP_SESSION_SECRET: "test-session-secret"
+          SECRET_KEY: "test-jwt-secret"
+          DATABASE_URL: "sqlite:///./test.db"
+        run: echo "Environment configured for CI"
+      - name: Run backend tests
+        env:
+          USE_MOCK_AUTH: "true"
+        run: pytest -v --tb=short --junitxml=test-results.xml
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-results-python-${{ matrix.python-version }}
+          path: features/test-results.xml
+
+  frontend-tests:
+    name: Frontend Build & Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: features/Frontend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: features/Frontend/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Build frontend
+        run: npm run build
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: features/Frontend/dist
