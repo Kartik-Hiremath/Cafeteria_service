@@ -1,0 +1,23 @@
+# Database
+cafeteria.db
+
+# Environment variables (IMPORTANT: Contains secrets!)
+.env
+
+# Virtual Environment
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Pytest cache
+.pytest_cache/
+
+# VS Code settings (optional but recommended)
+.vscode/
+
+# Mac system files
+.DS_Store

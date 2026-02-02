@@ -1,0 +1,45 @@
+source venv/bin/activate         
+
+SSH Key -> Your identification has been saved in /Users/siddharthpuhan/.ssh/id_ed25519
+
+python -m pip install fastapi uvicorn python-jose pytest
+What these are for:
+fastapi → backend framework
+uvicorn → server to run FastAPI
+python-jose → JWT tokens (mock auth later)
+pytest → unit testing. (python -m pytest)
+
+
+----- Typical Git Workflow
+
+When you start a new feature, create a feature branch: git checkout -b feature-auth
+
+Do work → commit → push:
+
+git add .
+git commit -m "Add mock auth"
+git push origin feature-auth
+
+When finished, merge after review:
+
+git checkout main
+git merge feature-auth
+git push
+
+check current branch: git branch
+check git status: git status
+
+git only pushes commits, not edited files. So, if a file is edited then it will be shown as modified after running "git status"
+if you see modifed files then create a commit and push
+
+git add .
+git commit -m "your message"
+git push
+
+----- Run the uvicorn server: uvicorn app.main:app --reload
+----- Any new dependency should be added to requirements.txt using the command: pip freeze > requirements.txt 
+
+----- SCHEMAS:
+
+Models (SQLite DB tables and SQLAlchemy) - define how data is stored in SQLite (models.py)
+Schemas (Pydantic) - define how data enters and leaves APIs (schemas.py)
