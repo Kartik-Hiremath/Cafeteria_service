@@ -53,12 +53,23 @@ app = FastAPI(
 )
 
 # Add session middleware (required for OAuth state/nonce tracking)
+# app.add_middleware(
+#     SessionMiddleware,
+#     secret_key=str(SESSION_SECRET),
+#     max_age=86400,  # 24 hours
+#     same_site="lax",
+# )
+
+# Add session middleware (required for OAuth state/nonce tracking)
 app.add_middleware(
     SessionMiddleware,
     secret_key=str(SESSION_SECRET),
     max_age=86400,  # 24 hours
-    same_site="lax",
+    # --- UPDATED FOR RENDER ---
+    same_site="none",  # Allows cookies to be sent across different .onrender.com domains
+    https_only=True,   # Required when same_site is "none"
 )
+
 
 # Add CORS middleware
 app.add_middleware(
