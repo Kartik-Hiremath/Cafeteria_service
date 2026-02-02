@@ -18,7 +18,7 @@ IBM_DISCOVERY_URL = os.getenv("IBM_DISCOVERY_URL") or os.getenv(
     "https://login.w3.ibm.com/oidc/endpoint/default/.well-known/openid-configuration",
 )
 
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000","https://cafeteria-service.onrender.com")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:3000")
 SESSION_SECRET = os.getenv("APP_SESSION_SECRET", "dev-secret-key-change-in-production")
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./cafeteria.db")
 
