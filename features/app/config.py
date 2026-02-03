@@ -23,7 +23,7 @@ SESSION_SECRET = os.getenv("APP_SESSION_SECRET", "dev-secret-key-change-in-produ
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./cafeteria.db")
 
 # Use mock auth when explicitly set (bypasses Real W3 even when configured)
-USE_MOCK_AUTH = os.getenv("USE_MOCK_AUTH", "false").lower() == "true"
+USE_MOCK_AUTH = os.getenv("USE_MOCK_AUTH", "true").lower() == "true"
 
 
 def is_w3_configured() -> bool:
